@@ -5,6 +5,10 @@
  * Version:           1.0.0.
  * Author:            Ilias anouar.
  */
+if (!defined('ABSPATH')) {
+    echo 'what are you trying to do';
+    exit;
+}
 // Create the table in the database when the plugin is activated
 register_activation_hook(__FILE__, 'contact_form_create_table');
 
