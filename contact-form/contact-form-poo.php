@@ -50,6 +50,7 @@ class Contact_form
     {
         add_action('admin_menu', array($this, 'contact_form_add_menu'));
         add_action('wp_enqueue_scripts', array($this, 'load_assets'));
+        add_shortcode('contact-form', array($this, 'load_shortcode'));
     }
 
     public function contact_form_add_menu()
@@ -69,10 +70,24 @@ class Contact_form
     {
         wp_enqueue_style(
             'contact-form',
-            plugin_dir_url(__FILE__).'css/contact-form.css',
+            plugin_dir_url(__FILE__) . 'css/contact-form.css',
             array(),
+            1,
             'all'
-    );
+        );
+
+        wp_enqueue_script(
+            'contact-form',
+            plugin_dir_url(__FILE__) . 'js/contact-form.js',
+            array('jquery'),
+            1,
+            true
+        );
+    }
+
+    public function load_shortcode()
+    {
+        return "hello, ilias is the best";
     }
 }
 
