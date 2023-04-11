@@ -19,10 +19,10 @@
 .w-100 {
     width: 100%;
 }
-
+/* 
 .btn {}
 
-.btn-send {}
+.btn-send {} */
 
 .btn-send:hover {
     background-color: green;
