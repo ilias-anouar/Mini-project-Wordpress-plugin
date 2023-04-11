@@ -49,7 +49,7 @@ class contact_form
     public function __construct()
     {
         register_activation_hook(__FILE__, 'contact_form_create_table');
-        add_action('admin_menu', 'contact_form_add_menu');
+        add_action('admin_menu', array($this, 'contact_form_add_menu'));
 
 
     }
@@ -74,7 +74,21 @@ class contact_form
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
     }
+    public function contact_form_add_menu()
+    {
+        add_menu_page(
+            'WPOrg',
+            'Contact Form',
+            'manage_options',
+            plugin_dir_path(__FILE__) . 'admin/view.php',
+            null,
+            'dashicons-admin-tools',
+            20
+        );
+    }
 }
+
+new contact_form;
 
 
 ?>
