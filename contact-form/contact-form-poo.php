@@ -119,7 +119,7 @@ class Contact_form
                     // console.log(form);
                     $.ajax({
                         method: 'post',
-                        // url: '<?php echo get_rest_url(null, 'contact-form/v1/send-email'); ?>',
+                        // url: '<?php echo get_rest_url(null, 'contact-form/v1/message'); ?>',
                         headers: { 'X-WP-Nonce': nonce },
                         data: form
                     })
@@ -129,9 +129,10 @@ class Contact_form
     <?php }
     public function register_rest_api()
     {
+        
         register_rest_route(
             'contact-form/v1',
-            'send-email',
+            'message',
             array(
                 'methods' => 'POST',
                 'callback' => array($this, 'handle_contact_form')
@@ -141,8 +142,11 @@ class Contact_form
 
     public function handle_contact_form($data)
     {
-        echo 'this is working ilias is the best';
+        $headers = $data->get_headers();
+        $params = $data->get_params();
+        echo json_encode($headers);
     }
+
 }
 
 new Contact_form;
