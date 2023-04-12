@@ -63,7 +63,7 @@ class Contact_form
     public function contact_form_add_menu()
     {
         add_menu_page(
-            'WPOrg',
+            'Contact-form',
             'Contact Form',
             'manage_options',
             plugin_dir_path(__FILE__) . 'admin/view.php',
@@ -114,12 +114,10 @@ class Contact_form
             (function ($) {
                 $('#contact-form__form').submit(function (event) {
                     event.preventDefault();
-                    // alert('ilias did a good work');
                     var form = $(this).serialize();
-                    // console.log(form);
                     $.ajax({
                         method: 'post',
-                        // url: '<?php echo get_rest_url(null, 'contact-form/v1/message'); ?>',
+                        url: '<?php echo get_rest_url(null, 'contact-form/v1/send-email'); ?>',
                         headers: { 'X-WP-Nonce': nonce },
                         data: form
                     })
@@ -129,10 +127,9 @@ class Contact_form
     <?php }
     public function register_rest_api()
     {
-        
         register_rest_route(
             'contact-form/v1',
-            'message',
+            'send-email',
             array(
                 'methods' => 'POST',
                 'callback' => array($this, 'handle_contact_form')
@@ -144,7 +141,25 @@ class Contact_form
     {
         $headers = $data->get_headers();
         $params = $data->get_params();
-        echo json_encode($headers);
+        $nonce = $headers['x_wp_nonce'][0];
+        if (!wp_verify_nonce($nonce, 'wp_rest')) {
+            return new WP_REST_Response('Message not sent', 422);
+        }
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'contact_form';
+        $contact_form_subject = $params['Subject'];
+        $contact_form_first_name = $params['First_name'];
+        $contact_form_last_name = $params['Last_name'];
+        $contact_form_email = $params['Email'];
+        $contact_form_message = $params['Message'];
+        $date = 'NOW()';
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'contact_form';
+        $sql = "INSERT INTO $table_name (`sujet`, `nom`, `prenom`, `email`, `message`, `date_envoi`) VALUES ('$contact_form_subject','$contact_form_first_name','$contact_form_last_name','$contact_form_email','$contact_form_message', $date)";
+        // $wpdb->query($sql);
+        if ($wpdb->query($sql)) {
+            return new WP_REST_Response('Thank you for your message', 200);
+        }
     }
 
 }
