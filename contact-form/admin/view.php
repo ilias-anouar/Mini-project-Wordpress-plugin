@@ -48,9 +48,6 @@ $data = $wpdb->get_results("SELECT * FROM $table_name");
             <?php
             foreach ($data as $message) {
                 $result = json_encode($message);
-                echo "<pre>";
-                var_dump($result);
-                echo "</pre>";
                 ?>
                 <tr>
                     <td>
